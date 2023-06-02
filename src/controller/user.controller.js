@@ -1,5 +1,5 @@
 const route = require('express').Router()
-const { getAllUsers, getUserById, createUsers, updateUsers } = require('../service/user.service')
+const { getAllUsers, getUserById, createUsers, updateUsers, deleteUserById } = require('../service/user.service')
 
 route.get('/', async (req, res) => {
     try {
@@ -41,6 +41,14 @@ route.put('/:id', async (req, res) => {
     }
 })
 
-
+route.delete('/:id', async (req, res) => {
+    try {
+        const { id } = req.params
+        const data = await deleteUserById(id)
+        res.status(200).send(data)
+    } catch (error) {
+        res.status(404).send(error.message)
+    }
+})
 
 module.exports = route
