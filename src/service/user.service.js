@@ -1,4 +1,5 @@
-const { getAllUsersDB, getUserByIdDB, createUsersDB, updateUsersDB, deleteUserByIdDB } = require('../repository/user.repository');
+const { getAllUsersDB, getUserByIdDB, createUsersDB, updateUsersDB, deleteUserByIdDB, PatchDataDB } = require('../repository/user.repository');
+// const { ExceptionType } = require('../exception/exception');
 
 async function getAllUsers() {
   const data = await getAllUsersDB();
@@ -30,4 +31,10 @@ async function deleteUserById(id) {
   return data;
 }
 
-module.exports = { getAllUsers, getUserById, createUsers, updateUsers, deleteUserById };
+async function PatchData(id, clientData) {
+  const data = await PatchDataDB(id, clientData);
+  if (!data.length) throw new Error('id not found');
+  return data;
+}
+
+module.exports = { getAllUsers, getUserById, createUsers, updateUsers, deleteUserById, PatchData };

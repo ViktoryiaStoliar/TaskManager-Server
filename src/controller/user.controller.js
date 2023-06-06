@@ -1,7 +1,7 @@
 const route = require('express').Router();
 const { buildResponse } = require('../helper/buildResponse');
-const { getAllUsers, getUserById, createUsers, updateUsers, deleteUserById } = require('../service/user.service');
-const {isValidId} = require('../helper/validation')
+const { getAllUsers, getUserById, createUsers, updateUsers, deleteUserById, PatchData } = require('../service/user.service');
+// const { isValidId } = require('../he6lper/validation');
 
 route.get('/', async (req, res) => {
   try {
@@ -47,6 +47,17 @@ route.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const data = await deleteUserById(id);
+    buildResponse(res, 200, data);
+  } catch (error) {
+    buildResponse(res, 404, error.message);
+  }
+});
+
+route.patch('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { clientData } = req.body;
+    const data = await PatchData(id, clientData);
     buildResponse(res, 200, data);
   } catch (error) {
     buildResponse(res, 404, error.message);
