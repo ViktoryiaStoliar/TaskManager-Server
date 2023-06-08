@@ -15,10 +15,10 @@ async function getUserByIdDB(id) {
 }
 
 async function createUsersDB(name, surname, email, pwd) {
+  const client = await pool.connect();
   try {
     await client.query('BEGIN');
 
-    const client = await pool.connect();
     const sql = 'insert into users (name, surname, email, pwd) values ($1, $2, $3, $4)  returning *';
     const data = (await client.query(sql, [name, surname, email, pwd])).rows;
 
@@ -33,10 +33,10 @@ async function createUsersDB(name, surname, email, pwd) {
 }
 
 async function updateUsersDB(id, name, surname, email, pwd) {
+  const client = await pool.connect();
   try {
     await client.query('BEGIN');
 
-    const client = await pool.connect();
     const sql = 'update users set name = $1, surname = $2, email = $3, pwd = $4 where id = $5 returning *';
     const data = (await client.query(sql, [name, surname, email, pwd, id])).rows;
 
@@ -45,17 +45,17 @@ async function updateUsersDB(id, name, surname, email, pwd) {
     return data;
   } catch (error) {
     await client.query('ROLLBACK');
-    console.log(`createUsersDB: ${error.message}`);
+    console.log(`updateUsersDB: ${error.message}`);
     return [];
   }
 }
 
 async function deleteUserByIdDB(id) {
+  const client = await pool.connect();
   try {
     await client.query('BEGIN');
 
-    const client = await pool.connect();
-    const sql = 'delete from uers where id = $1';
+    const sql = 'delete from users where id = $1';
     const data = (await client.query(sql, [id])).rows;
 
     await client.query('COMMIT');
@@ -63,22 +63,22 @@ async function deleteUserByIdDB(id) {
     return data;
   } catch (error) {
     await client.query('ROLLBACK');
-    console.log(`createUsersDB: ${error.message}`);
+    console.log(`deleteUserByIdDB: ${error.message}`);
     return [];
   }
 }
 
 async function PatchDataDB(id, clientData) {
+  const client = await pool.connect();
   try {
     await client.query('BEGIN');
 
-    const client = await pool.connect();
     const sql = 'select * from users where id = $1';
     const result1 = (await client.query(sql, [id])).rows;
 
     const newData = {
       ...result1[0],
-      ...clientData,
+      ...clientData
     };
 
     const sqlNew = 'update users set name = $1, surname = $2, email = $3, pwd = $4 where id = $5 returning *';
@@ -89,7 +89,7 @@ async function PatchDataDB(id, clientData) {
     return result2;
   } catch (error) {
     await client.query('ROLLBACK');
-    console.log(`createUsersDB: ${error.message}`);
+    console.log(`PatchDataDB: ${error.message}`);
     return [];
   }
 }
