@@ -78,7 +78,7 @@ async function PatchDataDB(id, clientData) {
 
     const newData = {
       ...result1[0],
-      ...clientData
+      ...clientData,
     };
 
     const sqlNew = 'update users set name = $1, surname = $2, email = $3, pwd = $4 where id = $5 returning *';
